@@ -1,26 +1,42 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+// App.tsx
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { AppDispatch } from "./store";
+import { fetchSalesData } from "./store/product/productSlice";
+
+import HeaderComponent from "./componets/HeaderComponent";
+import ProductDetailComponent from "./componets/ProductDetailComponent";
+import SalesGraphComponent from "./componets/SalesGraphComponent";
+import SalesTableComponent from "./componets/SalesTableComponent";
+
+
 
 function App() {
+  const dispatch = useDispatch<AppDispatch>();
+  const productInfo = useSelector((state: any) => state.product.product);
+
+  useEffect(() => {
+    dispatch(fetchSalesData());
+  }, [dispatch]);
+
+
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <HeaderComponent />
+      <main>
+        <ProductDetailComponent
+          image={productInfo.image}
+          title={productInfo.title}
+          subtitle={productInfo.subtitle}
+          tags={productInfo.tags}
+        />
+        <SalesGraphComponent salesData={productInfo.sales} />
+        <SalesTableComponent salesData={productInfo.sales} />
+      </main>
     </div>
   );
-}
+};
 
 export default App;
